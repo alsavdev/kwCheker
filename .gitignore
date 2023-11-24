@@ -1,0 +1,8 @@
+node_modules/
+backupdata
+dist/
+tesaja
+package-lock.json
+murni.js
+index.js
+iya.txt
