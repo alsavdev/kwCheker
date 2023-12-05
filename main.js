@@ -48,7 +48,7 @@ app.on('activate', () => {
     }
 });
 
-ipcMain.on('start', async (event, list, headless) => {
+ipcMain.on('start', async (event, list, headless, apiKeyValue) => {
     const logs = [];
     const reports = [];
     const prog = [];
@@ -75,7 +75,7 @@ ipcMain.on('start', async (event, list, headless) => {
     try {
         logToTextarea('[INFO] Process started...');
         event.sender.send("run");
-        await proccess(logToTextarea, logToTable, proggress, list, headless);
+        await proccess(logToTextarea, logToTable, proggress, list, headless, apiKeyValue);
         logToTextarea('[INFO] Process completed successfully.');
         event.sender.send("force");
     } catch (error) {

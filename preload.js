@@ -11,9 +11,11 @@ const startBtn = document.getElementById("start")
 const stoptBtn = document.getElementById("stop")
 const fileList = document.getElementById("list")
 const logTable = document.getElementById('data-table');
-const toggleView = document.getElementById("headless")
-const exportBtn = document.getElementById("export")
+const toggleView = document.getElementById("headless");
+const exportBtn = document.getElementById("export");
 const progressElem = document.getElementById('prog');
+const Api = document.getElementById('apikey')
+const inputFields = [fileList, Api];
 document.getElementById("nav").style.webkitAppRegion = 'drag'
 
 let previousReportData = [];
@@ -26,19 +28,20 @@ document.addEventListener("change", () => {
         logDiv.classList.add('hidden');
     }
 })
-const inputFields = [fileList];
+
 
 startBtn.addEventListener('click', () => {
-    if (validateForm([fileList])) {
+    if (validateForm(inputFields)) {
         document.getElementById('prog').style.width = '0%';
         const list = fileList.files[0]?.path;
         const headless = toggleView.checked ? false : 'new';
+        const apiKeyValue = Api.value;
         console.log(headless);
         clearLogTable();
         previousReportData = [];
         exportBtn.classList.add('hidden');
         initNumb = 0;
-        ipcRenderer.send('start', list, headless);
+        ipcRenderer.send('start', list, headless, apiKeyValue);
     }
 });
 
@@ -66,20 +69,30 @@ function validateForm(fields) {
     return isValid;
 }
 
-exportBtn.addEventListener('click', function() {
+exportBtn.addEventListener('click', function () {
     const wb = XLSX.utils.table_to_book(document.getElementById('data-table'));
     if (!wb['Sheets']['Sheet1']['!cols']) {
         wb['Sheets']['Sheet1']['!cols'] = [];
     }
-    wb['Sheets']['Sheet1']['!cols'][0] = { width: 5 };
-    wb['Sheets']['Sheet1']['!cols'][1] = { width: 14 };
-    wb['Sheets']['Sheet1']['!cols'][2] = { width: 40 };
+    wb['Sheets']['Sheet1']['!cols'][0] = {
+        width: 5
+    };
+    wb['Sheets']['Sheet1']['!cols'][1] = {
+        width: 14
+    };
+    wb['Sheets']['Sheet1']['!cols'][2] = {
+        width: 40
+    };
 
-    const data = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = XLSX.write(wb, {
+        bookType: 'xlsx',
+        type: 'array'
+    });
     ipcRenderer.send('save-excel-data', data);
 });
 
 let initNumb = 0
+
 function logToTable(search, hasil) {
     if (search !== undefined && hasil !== undefined) {
         const isDuplicate = previousReportData.some(report => report.search === search && report.hasil === hasil);
@@ -98,13 +111,13 @@ function logToTable(search, hasil) {
         }
     }
 }
-ipcRenderer.on('logToTable', (event, report) => {
+ipcRenderer.on('logToTable',(event, report) => {
     for (const log of report) {
         logToTable(log.search, log.hasil);
     }
 });
 
-const elDis = [fileList, toggleView]
+const elDis = [fileList, toggleView, Api]
 ipcRenderer.on("run", () => {
     elDis.forEach((e) => {
         e.disabled = true
@@ -182,10 +195,10 @@ ipcRenderer.on('force', () => {
 });
 
 // window.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        document.querySelector('.splash-container').classList.add('hidden');
-        document.querySelector('.main').classList.remove('hidden');
-    }, 2000);
+setTimeout(function () {
+    document.querySelector('.splash-container').classList.add('hidden');
+    document.querySelector('.main').classList.remove('hidden');
+}, 2000);
 // });
 
 function validateInput(input) {
