@@ -1,7 +1,7 @@
 {
   "name": "alsav-keyword-checker",
   "productName": "Alsav Keyword Checker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Checker software",
   "main": "src/main.js",
   "scripts": {
