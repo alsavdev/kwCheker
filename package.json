@@ -1,16 +1,17 @@
 {
-  "name": "kw-checker",
-  "productName": "kw-checker",
-  "version": "1.1.2",
-  "description": "My Electron application description",
-  "main": "main.js",
+  "name": "alsav-keyword-checker",
+  "productName": "Alsav Keyword Checker",
+  "version": "1.0.0",
+  "description": "Checker software",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "build": "npx electron-builder build"
+    "build": "npx electron-builder build",
+    "deploy": "electron-builder -p always",
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
   "author": "Alsav System",
@@ -19,6 +20,7 @@
     "bootstrap": "^5.3.2",
     "chromedriver": "^117.0.3",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^6.1.7",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
     "prompt-sync": "^4.2.0",
@@ -39,21 +41,40 @@
     "electron": "^26.2.4",
     "electron-builder": "^24.6.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alsavdev/kwCheker"
+  },
   "build": {
-    "appId": "Kw-Checker",
-    "productName": "Kw-Checker",
+    "appId": "Alsav Keyword Checker",
+    "productName": "Alsav Keyword Checker",
     "compression": "maximum",
+    "copyright": "Copyright © 2024 Alsav System",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "alsavdev",
+        "repo": "kwCheker",
+        "private": true
+      }
+    ],
     "win": {
       "target": [
         "nsis"
       ],
-      "icon": "./assets/logo.png"
+      "icon": "./src/assets/logo.png"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true
-    }
+    },
+    "extraFiles": [
+      "src/extension/spoof",
+      "src/extension/captcha",
+      "src/extension/cghost",
+      "src/data/"
+    ]
   }
 }
